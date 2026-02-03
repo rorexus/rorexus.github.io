@@ -39,3 +39,23 @@ body {
 .publication {
   margin-bottom: 4rem;
 }
+
+.support {
+  margin-top: 4rem;
+  text-align: center;
+}
+
+.bmc-button {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  border-radius: 6px;
+  background: #ffdd00;
+  color: #000;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.bmc-button:hover {
+  background: #f5d000;
+}
