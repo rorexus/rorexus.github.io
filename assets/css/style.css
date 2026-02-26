@@ -59,3 +59,46 @@ body {
 .bmc-button:hover {
   background: #f5d000;
 }
+/* Articles Section */
+.articles {
+  margin-top: 4rem;
+}
+
+#medium-articles {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-top: 1rem;
+}
+
+.article-card {
+  padding: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background: #ffffff;
+  transition: 0.2s ease;
+}
+
+.article-card:hover {
+  border-color: #0066cc;
+  transform: translateY(-2px);
+}
+
+.article-card h3 {
+  margin: 0 0 0.3rem 0;
+  font-size: 1.05rem;
+}
+
+.article-card a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+.article-card a:hover {
+  text-decoration: underline;
+}
+
+.article-date {
+  font-size: 0.85rem;
+  color: #666;
+}
