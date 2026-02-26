@@ -9,11 +9,9 @@
 </head>
 
 <body>
-  <!-- Animated background layer -->
+  <!-- Animated background -->
   <div class="bg" aria-hidden="true">
     <div class="grid"></div>
-
-    <!-- floating characters -->
     <div class="floaters">
       <span class="floater f1">λ</span>
       <span class="floater f2">∇</span>
@@ -30,7 +28,7 @@
     </div>
   </div>
 
-  <!-- Hanging bulb (click the bulb itself) -->
+  <!-- Hanging bulb -->
   <div class="bulb-wrap" aria-hidden="true">
     <div id="bulb" class="bulb" title="Toggle light" role="button" tabindex="0">
       <div class="cord"></div>
@@ -41,30 +39,29 @@
     </div>
   </div>
 
-  <!-- Page lighting overlay -->
+  <!-- Lighting overlay -->
   <div id="light-overlay" class="light-overlay" aria-hidden="true"></div>
 
-  <!-- Mascot that jumps on headings + pulls the cord -->
+  <!-- Mascot -->
   <div id="mascot" class="mascot" aria-hidden="true">🤖</div>
 
   <main class="shell">
     <section class="hero card">
       <h1>rorexus</h1>
-      <p class="subtitle">
-        Computational Science · Engineering · Data-Driven Research
-      </p>
+      <p class="subtitle">Computational Science · Engineering · Data-Driven Research</p>
 
+      <!-- Mascot hops between these links -->
       <p class="links">
-        <a href="publications.html">Publications</a> ·
-        <a href="projects.html">Projects</a> ·
-        <a href="https://github.com/rotsl">GitHub</a> ·
-        <a href="https://orcid.org/0009-0005-9225-1775">ORCID</a> ·
-        <a href="https://www.researchgate.net/profile/Rohan-B-R-2">ResearchGate</a>
+        <a class="hop-link" href="publications.html">Publications</a> ·
+        <a class="hop-link" href="projects.html">Projects</a> ·
+        <a class="hop-link" href="https://github.com/rotsl">GitHub</a> ·
+        <a class="hop-link" href="https://orcid.org/0009-0005-9225-1775">ORCID</a> ·
+        <a class="hop-link" href="https://www.researchgate.net/profile/Rohan-B-R-2">ResearchGate</a>
       </p>
     </section>
 
     <section class="card">
-      <h2 class="hop-target">Research Areas</h2>
+      <h2>Research Areas</h2>
       <ul class="tags">
         <li>Fluid Mechanics</li>
         <li>Nuclear Engineering</li>
@@ -77,7 +74,7 @@
     </section>
 
     <section class="articles card">
-      <h2 class="hop-target">Articles</h2>
+      <h2>Articles</h2>
       <div id="medium-articles">
         <p class="muted">Loading latest articles...</p>
       </div>
@@ -87,14 +84,9 @@
     </section>
 
     <section class="support card">
-      <h2 class="hop-target">Support</h2>
+      <h2>Support</h2>
       <p class="muted">If you find this work useful, you may support me here:</p>
-      <a
-        class="bmc-button"
-        href="https://buymeacoffee.com/rorexus"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
+      <a class="bmc-button" href="https://buymeacoffee.com/rorexus" target="_blank" rel="noopener noreferrer">
         ☕ Buy Me a Coffee
       </a>
     </section>
@@ -107,8 +99,7 @@
   <script>
     async function loadMediumArticles() {
       const rssUrl = "https://medium.com/feed/@rotsl";
-      const apiUrl =
-        "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent(rssUrl);
+      const apiUrl = "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent(rssUrl);
 
       try {
         const response = await fetch(apiUrl);
@@ -129,9 +120,7 @@
 
           article.innerHTML = `
             <h3>
-              <a href="${item.link}" target="_blank" rel="noopener noreferrer">
-                ${item.title}
-              </a>
+              <a href="${item.link}" target="_blank" rel="noopener noreferrer">${item.title}</a>
             </h3>
             <p class="article-date">${date}</p>
           `;
@@ -150,7 +139,7 @@
 
     loadMediumArticles();
 
-    // Bulb click -> toggle "lit" mode (and keyboard Enter/Space)
+    // Bulb click toggles lit mode + keyboard
     (function () {
       const bulb = document.getElementById("bulb");
       if (!bulb) return;
@@ -166,57 +155,49 @@
       });
     })();
 
-    // Mascot: hops on section headings, and every 15s pulls the cord to toggle light.
+    // Mascot hops between hero links; every 15s it pulls cord and toggles light (on/off alternating)
     (function () {
       const mascot = document.getElementById("mascot");
       const bulb = document.getElementById("bulb");
-      const targets = Array.from(document.querySelectorAll(".hop-target"));
+      const links = Array.from(document.querySelectorAll(".hop-link"));
 
-      if (!mascot || !bulb || targets.length === 0) return;
+      if (!mascot || !bulb || links.length === 0) return;
 
       const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 
-      // Place mascot initially near first heading
       function rectCenter(el) {
         const r = el.getBoundingClientRect();
         return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
       }
 
-      function sleep(ms) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
-      }
-
-      async function moveTo(x, y, opts = {}) {
-        const { duration = 650, hop = false } = opts;
-
+      async function moveTo(x, y, { duration = 650, hop = false } = {}) {
         mascot.style.setProperty("--move-ms", `${duration}ms`);
         mascot.style.left = `${x}px`;
         mascot.style.top = `${y}px`;
 
         if (hop && !reducedMotion) {
           mascot.classList.remove("hop");
-          void mascot.offsetWidth; // restart animation
+          void mascot.offsetWidth;
           mascot.classList.add("hop");
         }
         await sleep(duration);
       }
 
-      async function hopOnTarget(el) {
+      async function hopOnLink(el) {
         const c = rectCenter(el);
-        // Sit slightly above the heading text
-        await moveTo(c.x, c.y - 26, { duration: 700, hop: true });
-        if (!reducedMotion) await sleep(250);
+        // Sit slightly above the link text line
+        await moveTo(c.x, c.y - 26, { duration: 650, hop: true });
+        await sleep(reducedMotion ? 0 : 220);
       }
 
       async function pullCordAndToggle() {
-        // Go to bulb position (near socket)
         const b = bulb.getBoundingClientRect();
         const bx = b.left + b.width / 2;
-        const by = b.top + 130; // near socket/glass
+        const by = b.top + 132;
 
-        await moveTo(bx, by, { duration: 850, hop: true });
+        await moveTo(bx, by, { duration: 800, hop: true });
 
-        // Pull animation + bulb tug
         if (!reducedMotion) {
           mascot.classList.remove("pull");
           void mascot.offsetWidth;
@@ -227,12 +208,9 @@
           bulb.classList.add("tug");
         }
 
-        await sleep(reducedMotion ? 200 : 650);
-
-        // Toggle light
+        await sleep(reducedMotion ? 150 : 650);
         document.body.classList.toggle("lit");
-
-        await sleep(reducedMotion ? 200 : 450);
+        await sleep(reducedMotion ? 150 : 450);
 
         mascot.classList.remove("pull");
         bulb.classList.remove("tug");
@@ -245,8 +223,7 @@
         if (busy) return;
         busy = true;
 
-        // Hop across headings
-        await hopOnTarget(targets[idx % targets.length]);
+        await hopOnLink(links[idx % links.length]);
         idx++;
 
         busy = false;
@@ -257,34 +234,27 @@
         busy = true;
 
         await pullCordAndToggle();
-
-        // After pulling, hop onto the next heading to continue the vibe
-        await hopOnTarget(targets[idx % targets.length]);
+        await hopOnLink(links[idx % links.length]);
         idx++;
 
         busy = false;
       }
 
-      // Initial placement
-      (async () => {
-        const c0 = rectCenter(targets[0]);
-        mascot.style.left = `${c0.x}px`;
-        mascot.style.top = `${c0.y - 26}px`;
-      })();
+      // initial placement (visible immediately)
+      const c0 = rectCenter(links[0]);
+      mascot.style.left = `${c0.x}px`;
+      mascot.style.top = `${c0.y - 26}px`;
 
-      // Hop between headings periodically
-      setInterval(() => {
-        if (!reducedMotion) hopLoop();
-      }, 2600);
+      // start hopping quickly so you definitely see motion
+      setTimeout(hopLoop, 450);
+      setInterval(hopLoop, 2400);
 
-      // Every 15s: mascot pulls cord and toggles light (on, then off, alternating)
-      setInterval(() => {
-        autoToggleLoop();
-      }, 15000);
+      // every 15 seconds: pull and toggle (on, then off, alternating via toggle)
+      setInterval(autoToggleLoop, 15000);
 
-      // Keep mascot aligned on resize (snap to current target)
+      // keep aligned on resize
       window.addEventListener("resize", () => {
-        const el = targets[(idx - 1 + targets.length) % targets.length];
+        const el = links[(idx - 1 + links.length) % links.length];
         const c = rectCenter(el);
         mascot.style.left = `${c.x}px`;
         mascot.style.top = `${c.y - 26}px`;
