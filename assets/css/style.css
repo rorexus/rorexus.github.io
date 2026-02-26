@@ -6,13 +6,12 @@
   --muted: rgba(255,255,255,0.70);
   --muted2: rgba(255,255,255,0.55);
   --line: rgba(255,255,255,0.14);
-  --accent: #7dd3fc;   /* soft cyan */
-  --accent2:#a78bfa;   /* soft violet */
+  --accent: #7dd3fc;
+  --accent2:#a78bfa;
   --shadow: 0 16px 60px rgba(0,0,0,0.35);
 }
 
 * { box-sizing: border-box; }
-
 html, body { height: 100%; }
 
 body {
@@ -62,7 +61,6 @@ body {
   user-select: none;
 }
 
-/* Each floater gets its own path */
 .f1 { left: 8%;  top: 18%; font-size: 44px; animation: drift1 14s ease-in-out infinite; }
 .f2 { left: 78%; top: 12%; font-size: 52px; animation: drift2 18s ease-in-out infinite; }
 .f3 { left: 20%; top: 70%; font-size: 40px; animation: drift3 20s ease-in-out infinite; }
@@ -95,7 +93,7 @@ body {
   margin: 0 auto;
   padding: clamp(2rem, 5vw, 4rem) 0 3rem;
   position: relative;
-  z-index: 3; /* above overlay */
+  z-index: 3; /* above lighting overlay */
 }
 
 .card{
@@ -140,14 +138,14 @@ h2{
 .muted{ color: var(--muted); }
 .tiny{ font-size: 0.85rem; color: var(--muted2); margin-top: 0.9rem; }
 
-/* Links */
+/* Links: SAME colour for all, changes when light is ON */
 .links a{
-  color: var(--text);
+  color: rgba(255,255,255,0.92);
   text-decoration: none;
-  padding: 0.2rem 0.4rem;
+  padding: 0.2rem 0.45rem;
   border-radius: 10px;
   border: 1px solid transparent;
-  transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
 }
 
 .links a:hover{
@@ -352,7 +350,7 @@ h2{
 .light-overlay{
   position: fixed;
   inset: 0;
-  z-index: 2; /* above background, below content */
+  z-index: 2;
   pointer-events: none;
   opacity: 0;
   transition: opacity 500ms ease;
@@ -367,6 +365,29 @@ h2{
       rgba(255,255,255,0.00) 60%);
 }
 
+/* Bulb "tug" effect when mascot pulls */
+.bulb.tug{
+  animation: tug 700ms ease-in-out;
+}
+
+@keyframes tug{
+  0%   { transform: rotate(0deg); }
+  30%  { transform: rotate(3.5deg); }
+  60%  { transform: rotate(-3deg); }
+  100% { transform: rotate(1deg); }
+}
+
+.bulb.tug .cord{
+  animation: cordPull 700ms ease-in-out;
+}
+
+@keyframes cordPull{
+  0%   { height: 120px; }
+  45%  { height: 132px; }
+  100% { height: 120px; }
+}
+
+/* Lights ON mode */
 body.lit{
   background:
     radial-gradient(1200px 800px at 20% 10%, #1e3a8a 0%, transparent 55%),
@@ -384,9 +405,72 @@ body.lit .card{
 
 body.lit .grid{ opacity: 0.22; }
 
+/* SAME colour for all links, but different when lit */
+body.lit .links a{
+  color: rgba(15, 23, 42, 0.92);
+  border-color: rgba(15, 23, 42, 0.14);
+  background: rgba(255, 246, 210, 0.28);
+}
+
+body.lit .links a:hover{
+  background: rgba(255, 246, 210, 0.42);
+  border-color: rgba(15, 23, 42, 0.22);
+}
+
+/* ---------------- Mascot ---------------- */
+
+.mascot{
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 7;
+  transform: translate(-50%, -50%);
+  font-size: 22px;
+  opacity: 0.96;
+  pointer-events: none;
+
+  /* Movement controlled by JS via left/top; transition controls glide */
+  transition:
+    left var(--move-ms, 650ms) cubic-bezier(.2,.8,.2,1),
+    top  var(--move-ms, 650ms) cubic-bezier(.2,.8,.2,1),
+    transform 220ms ease;
+}
+
+/* little hop when landing */
+.mascot.hop{
+  animation: mascotHop 520ms ease-in-out;
+}
+
+@keyframes mascotHop{
+  0%   { transform: translate(-50%, -50%) scale(1,1); }
+  30%  { transform: translate(-50%, calc(-50% - 14px)) scale(1.05,0.95); }
+  55%  { transform: translate(-50%, calc(-50% - 6px)) scale(0.98,1.02); }
+  100% { transform: translate(-50%, -50%) scale(1,1); }
+}
+
+/* pull motion (arms vibes) */
+.mascot.pull{
+  animation: mascotPull 650ms ease-in-out;
+}
+
+@keyframes mascotPull{
+  0%   { transform: translate(-50%, -50%) rotate(0deg); }
+  25%  { transform: translate(-50%, calc(-50% - 10px)) rotate(-10deg); }
+  55%  { transform: translate(-50%, calc(-50% + 6px)) rotate(10deg); }
+  100% { transform: translate(-50%, -50%) rotate(0deg); }
+}
+
+body.lit .mascot{
+  filter: drop-shadow(0 10px 18px rgba(255,246,210,0.25));
+}
+
 /* Accessibility: reduce motion */
 @media (prefers-reduced-motion: reduce){
   .floater{ animation: none !important; }
   .article-card, .links a, .bmc-button{ transition: none !important; }
   .bulb{ animation: none !important; }
+  .bulb.tug{ animation: none !important; }
+  .bulb.tug .cord{ animation: none !important; }
+  .mascot{ transition: none !important; }
+  .mascot.hop, .mascot.pull{ animation: none !important; }
 }
