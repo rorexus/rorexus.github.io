@@ -44,6 +44,9 @@
   <!-- Page lighting overlay -->
   <div id="light-overlay" class="light-overlay" aria-hidden="true"></div>
 
+  <!-- Mascot that jumps on headings + pulls the cord -->
+  <div id="mascot" class="mascot" aria-hidden="true">🤖</div>
+
   <main class="shell">
     <section class="hero card">
       <h1>rorexus</h1>
@@ -61,7 +64,7 @@
     </section>
 
     <section class="card">
-      <h2>Research Areas</h2>
+      <h2 class="hop-target">Research Areas</h2>
       <ul class="tags">
         <li>Fluid Mechanics</li>
         <li>Nuclear Engineering</li>
@@ -73,19 +76,18 @@
       </ul>
     </section>
 
-    <!-- ARTICLES SECTION -->
     <section class="articles card">
-      <h2>Articles</h2>
+      <h2 class="hop-target">Articles</h2>
       <div id="medium-articles">
         <p class="muted">Loading latest articles...</p>
       </div>
       <p class="tiny muted">
-        Source: Medium RSS feed.
+        Source: Medium RSS feed via rss2json. If it fails, it may be blocked or rate-limited.
       </p>
     </section>
 
     <section class="support card">
-      <h2>Support</h2>
+      <h2 class="hop-target">Support</h2>
       <p class="muted">If you find this work useful, you may support me here:</p>
       <a
         class="bmc-button"
@@ -161,6 +163,131 @@
           e.preventDefault();
           toggle();
         }
+      });
+    })();
+
+    // Mascot: hops on section headings, and every 15s pulls the cord to toggle light.
+    (function () {
+      const mascot = document.getElementById("mascot");
+      const bulb = document.getElementById("bulb");
+      const targets = Array.from(document.querySelectorAll(".hop-target"));
+
+      if (!mascot || !bulb || targets.length === 0) return;
+
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      // Place mascot initially near first heading
+      function rectCenter(el) {
+        const r = el.getBoundingClientRect();
+        return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+      }
+
+      function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+
+      async function moveTo(x, y, opts = {}) {
+        const { duration = 650, hop = false } = opts;
+
+        mascot.style.setProperty("--move-ms", `${duration}ms`);
+        mascot.style.left = `${x}px`;
+        mascot.style.top = `${y}px`;
+
+        if (hop && !reducedMotion) {
+          mascot.classList.remove("hop");
+          void mascot.offsetWidth; // restart animation
+          mascot.classList.add("hop");
+        }
+        await sleep(duration);
+      }
+
+      async function hopOnTarget(el) {
+        const c = rectCenter(el);
+        // Sit slightly above the heading text
+        await moveTo(c.x, c.y - 26, { duration: 700, hop: true });
+        if (!reducedMotion) await sleep(250);
+      }
+
+      async function pullCordAndToggle() {
+        // Go to bulb position (near socket)
+        const b = bulb.getBoundingClientRect();
+        const bx = b.left + b.width / 2;
+        const by = b.top + 130; // near socket/glass
+
+        await moveTo(bx, by, { duration: 850, hop: true });
+
+        // Pull animation + bulb tug
+        if (!reducedMotion) {
+          mascot.classList.remove("pull");
+          void mascot.offsetWidth;
+          mascot.classList.add("pull");
+
+          bulb.classList.remove("tug");
+          void bulb.offsetWidth;
+          bulb.classList.add("tug");
+        }
+
+        await sleep(reducedMotion ? 200 : 650);
+
+        // Toggle light
+        document.body.classList.toggle("lit");
+
+        await sleep(reducedMotion ? 200 : 450);
+
+        mascot.classList.remove("pull");
+        bulb.classList.remove("tug");
+      }
+
+      let idx = 0;
+      let busy = false;
+
+      async function hopLoop() {
+        if (busy) return;
+        busy = true;
+
+        // Hop across headings
+        await hopOnTarget(targets[idx % targets.length]);
+        idx++;
+
+        busy = false;
+      }
+
+      async function autoToggleLoop() {
+        if (busy) return;
+        busy = true;
+
+        await pullCordAndToggle();
+
+        // After pulling, hop onto the next heading to continue the vibe
+        await hopOnTarget(targets[idx % targets.length]);
+        idx++;
+
+        busy = false;
+      }
+
+      // Initial placement
+      (async () => {
+        const c0 = rectCenter(targets[0]);
+        mascot.style.left = `${c0.x}px`;
+        mascot.style.top = `${c0.y - 26}px`;
+      })();
+
+      // Hop between headings periodically
+      setInterval(() => {
+        if (!reducedMotion) hopLoop();
+      }, 2600);
+
+      // Every 15s: mascot pulls cord and toggles light (on, then off, alternating)
+      setInterval(() => {
+        autoToggleLoop();
+      }, 15000);
+
+      // Keep mascot aligned on resize (snap to current target)
+      window.addEventListener("resize", () => {
+        const el = targets[(idx - 1 + targets.length) % targets.length];
+        const c = rectCenter(el);
+        mascot.style.left = `${c.x}px`;
+        mascot.style.top = `${c.y - 26}px`;
       });
     })();
   </script>
