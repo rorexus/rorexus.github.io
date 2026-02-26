@@ -1,107 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>rorexus | Research & Engineering</title>
-  <meta name="robots" content="noindex, nofollow">
-  <link rel="stylesheet" href="assets/css/style.css">
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="stylesheet" href="assets/css/style.css" />
 </head>
+
 <body>
+  <!-- Animated background layer -->
+  <div class="bg" aria-hidden="true">
+    <div class="grid"></div>
 
-<section class="hero">
-  <h1>rorexus</h1>
-  <p class="subtitle">
-    Computational Science · Engineering · Data-Driven Research
-  </p>
-
-  <p class="links">
-    <a href="publications.html">Publications</a> ·
-    <a href="projects.html">Projects</a> ·
-    <a href="https://github.com/rotsl">GitHub</a> ·
-    <a href="https://orcid.org/0009-0005-9225-1775">ORCID</a> ·
-    <a href="https://www.researchgate.net/profile/Rohan-B-R-2">ResearchGate</a>
-  </p>
-</section>
-
-<section>
-  <h2>Research Areas</h2>
-  <ul class="tags">
-    <li>Fluid Mechanics</li>
-    <li>Nuclear Engineering</li>
-    <li>Computational Science</li>
-    <li>Embedded Systems</li>
-    <li>Automation & Robotics</li>
-    <li>Image Analysis</li>
-    <li>Machine Learning</li>
-  </ul>
-</section>
-
-<!-- ARTICLES SECTION -->
-<section class="articles">
-  <h2>Articles</h2>
-  <div id="medium-articles">
-    <p>Loading latest articles...</p>
+    <!-- floating characters -->
+    <div class="floaters">
+      <span class="floater f1">λ</span>
+      <span class="floater f2">∇</span>
+      <span class="floater f3">π</span>
+      <span class="floater f4">Σ</span>
+      <span class="floater f5">μ</span>
+      <span class="floater f6">⚙</span>
+      <span class="floater f7">□</span>
+      <span class="floater f8">→</span>
+      <span class="floater f9">Δ</span>
+      <span class="floater f10">⊗</span>
+      <span class="floater f11">∞</span>
+      <span class="floater f12">+</span>
+    </div>
   </div>
-</section>
 
-<section class="support">
-  <h2>Support</h2>
-  <p>
-    If you find this work useful, you may support me here:
-  </p>
-  <a
-    class="bmc-button"
-    href="https://buymeacoffee.com/rorexus"
-    target="_blank"
-    rel="noopener noreferrer">
-    ☕ Buy Me a Coffee
-  </a>
-</section>
+  <!-- Hanging bulb (click the bulb itself) -->
+  <div class="bulb-wrap" aria-hidden="true">
+    <div id="bulb" class="bulb" title="Toggle light" role="button" tabindex="0">
+      <div class="cord"></div>
+      <div class="socket"></div>
+      <div class="glass"></div>
+      <div class="filament"></div>
+      <div class="glow"></div>
+    </div>
+  </div>
 
-<footer>
-  <p>
-    © rorexus · GitHub Pages
-  </p>
-</footer>
+  <!-- Page lighting overlay -->
+  <div id="light-overlay" class="light-overlay" aria-hidden="true"></div>
 
-<script>
-async function loadMediumArticles() {
-  const rssUrl = "https://medium.com/feed/@rotsl";
-  const apiUrl = "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent(rssUrl);
+  <main class="shell">
+    <section class="hero card">
+      <h1>rorexus</h1>
+      <p class="subtitle">
+        Computational Science · Engineering · Data-Driven Research
+      </p>
 
-  try {
-    const response = await fetch(apiUrl);
-    const data = await response.json();
+      <p class="links">
+        <a href="publications.html">Publications</a> ·
+        <a href="projects.html">Projects</a> ·
+        <a href="https://github.com/rotsl">GitHub</a> ·
+        <a href="https://orcid.org/0009-0005-9225-1775">ORCID</a> ·
+        <a href="https://www.researchgate.net/profile/Rohan-B-R-2">ResearchGate</a>
+      </p>
+    </section>
 
-    const container = document.getElementById("medium-articles");
-    container.innerHTML = "";
+    <section class="card">
+      <h2>Research Areas</h2>
+      <ul class="tags">
+        <li>Fluid Mechanics</li>
+        <li>Nuclear Engineering</li>
+        <li>Computational Science</li>
+        <li>Embedded Systems</li>
+        <li>Automation & Robotics</li>
+        <li>Image Analysis</li>
+        <li>Machine Learning</li>
+      </ul>
+    </section>
 
-    data.items.slice(0, 5).forEach(item => {
-      const article = document.createElement("div");
-      article.className = "article-card";
+    <!-- ARTICLES SECTION -->
+    <section class="articles card">
+      <h2>Articles</h2>
+      <div id="medium-articles">
+        <p class="muted">Loading latest articles...</p>
+      </div>
+      <p class="tiny muted">
+        Source: Medium RSS feed. If it fails, it may be blocked by the RSS proxy service.
+      </p>
+    </section>
 
-      const date = new Date(item.pubDate).toLocaleDateString();
+    <section class="support card">
+      <h2>Support</h2>
+      <p class="muted">If you find this work useful, you may support me here:</p>
+      <a
+        class="bmc-button"
+        href="https://buymeacoffee.com/rorexus"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        ☕ Buy Me a Coffee
+      </a>
+    </section>
 
-      article.innerHTML = `
-        <h3>
-          <a href="${item.link}" target="_blank" rel="noopener noreferrer">
-            ${item.title}
-          </a>
-        </h3>
-        <p class="article-date">${date}</p>
-      `;
+    <footer class="footer">
+      <p>© rorexus · GitHub Pages</p>
+    </footer>
+  </main>
 
-      container.appendChild(article);
-    });
+  <script>
+    async function loadMediumArticles() {
+      const rssUrl = "https://medium.com/feed/@rotsl";
+      const apiUrl =
+        "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent(rssUrl);
 
-  } catch (error) {
-    document.getElementById("medium-articles").innerHTML =
-      "<p>Unable to load articles at the moment.</p>";
-  }
-}
+      try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
 
-loadMediumArticles();
-</script>
+        const container = document.getElementById("medium-articles");
+        container.innerHTML = "";
 
+        (data.items || []).slice(0, 5).forEach((item) => {
+          const article = document.createElement("div");
+          article.className = "article-card";
+
+          const date = new Date(item.pubDate).toLocaleDateString(undefined, {
+            year: "numeric",
+            month: "short",
+            day: "2-digit",
+          });
+
+          article.innerHTML = `
+            <h3>
+              <a href="${item.link}" target="_blank" rel="noopener noreferrer">
+                ${item.title}
+              </a>
+            </h3>
+            <p class="article-date">${date}</p>
+          `;
+
+          container.appendChild(article);
+        });
+
+        if (!container.children.length) {
+          container.innerHTML = "<p class='muted'>No articles found.</p>";
+        }
+      } catch (error) {
+        document.getElementById("medium-articles").innerHTML =
+          "<p class='muted'>Unable to load articles at the moment.</p>";
+      }
+    }
+
+    loadMediumArticles();
+
+    // Bulb click -> toggle "lit" mode (and keyboard Enter/Space)
+    (function () {
+      const bulb = document.getElementById("bulb");
+      if (!bulb) return;
+
+      const toggle = () => document.body.classList.toggle("lit");
+
+      bulb.addEventListener("click", toggle);
+      bulb.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          toggle();
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
