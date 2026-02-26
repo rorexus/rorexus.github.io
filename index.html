@@ -36,6 +36,13 @@
   </ul>
 </section>
 
+<!-- ARTICLES SECTION -->
+<section class="articles">
+  <h2>Articles</h2>
+  <div id="medium-articles">
+    <p>Loading latest articles...</p>
+  </div>
+</section>
 
 <section class="support">
   <h2>Support</h2>
@@ -50,12 +57,51 @@
     ☕ Buy Me a Coffee
   </a>
 </section>
-  
+
 <footer>
   <p>
-    © rorexus · GitHub Pages · 
+    © rorexus · GitHub Pages
   </p>
 </footer>
+
+<script>
+async function loadMediumArticles() {
+  const rssUrl = "https://medium.com/feed/@rotsl";
+  const apiUrl = "https://api.rss2json.com/v1/api.json?rss_url=" + encodeURIComponent(rssUrl);
+
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+
+    const container = document.getElementById("medium-articles");
+    container.innerHTML = "";
+
+    data.items.slice(0, 5).forEach(item => {
+      const article = document.createElement("div");
+      article.className = "article-card";
+
+      const date = new Date(item.pubDate).toLocaleDateString();
+
+      article.innerHTML = `
+        <h3>
+          <a href="${item.link}" target="_blank" rel="noopener noreferrer">
+            ${item.title}
+          </a>
+        </h3>
+        <p class="article-date">${date}</p>
+      `;
+
+      container.appendChild(article);
+    });
+
+  } catch (error) {
+    document.getElementById("medium-articles").innerHTML =
+      "<p>Unable to load articles at the moment.</p>";
+  }
+}
+
+loadMediumArticles();
+</script>
 
 </body>
 </html>
