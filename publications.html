@@ -16,8 +16,32 @@
       color: black !important;
     }
 
+    /* Default links */
     a {
       color: orange !important;
+    }
+
+    /* --- OVERRIDES (force dark blue) --- */
+
+    /* 1. Author name + paragraph text */
+    .publication p {
+      color: darkblue !important;
+    }
+
+    /* 2. DOI links only */
+    .publication a[href*="doi.org"] {
+      color: darkblue !important;
+    }
+
+    /* 3. View Paper (collapsible label) */
+    details summary {
+      color: darkblue !important;
+    }
+
+    /* Hover consistency */
+    .publication a[href*="doi.org"]:hover,
+    details summary:hover {
+      color: #00008b !important;
     }
 
     details {
