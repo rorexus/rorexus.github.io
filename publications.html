@@ -185,7 +185,38 @@
     </a>
   </p>
 </section>
+<hr>
 
+<section class="publication">
+  <h2>Physics-Informed Conic Decomposition (PICD): A guarded solver layer for linear, nonlinear, and time-dependent problems</h2>
+  <p>
+    Physics-Informed Conic Decomposition (PICD) is a solver-layer construction placed
+    around standard iterative methods rather than a replacement for them. The layer keeps
+    a state over cone or block decompositions, residual history, and graph structure, then
+    uses bounded gravity-like weights, transport-like congestion summaries, swarm-style adap-
+    tation, residual correlation, and graph coarse information to alter preconditioner assembly,
+    accepted-step damping, and coarse correction. The inner classical method is left intact dur-
+    ing each solve. This paper states the mathematical parts of the design that are explicit
+    in the current implementation, gives the algorithmic steps needed to apply PICD, and re-
+    ports measurements from the repository that serves as the validation harness. The current
+    repository run passes 98 out of 98 tests and completes 22 out of 22 examples. The current
+    same-method publication benchmark suite favors PICD in both wall time and peak memory
+    on every published pair. The full shipped linear example corpus contains 15 same-method
+    pairs, with PICD faster on 14 of them in the latest run. The nonlinear and transient exam-
+    ples are mixed: several direct pairs favor PICD, one is eectively even, and two are slower
+    on this run. That sets the scope of the paper's performance claims.<br>
+    Rohan R.<br>
+    DOI:
+    <a href="https://doi.org/10.13140/RG.2.2.10721.06243" target="_blank" rel="noopener noreferrer">
+      10.13140/RG.2.2.10721.06243
+    </a>
+  </p>
+
+  <details>
+    <summary>View Paper</summary>
+    <iframe src="assets/pdfs/Paper13.pdf" width="100%" height="900px" style="border:none;"></iframe>
+  </details>
+</section>
 <hr>
 
 <section class="publication">
