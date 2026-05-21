@@ -66,7 +66,7 @@
         <li>Fluid Mechanics</li>
         <li>Nuclear Engineering</li>
         <li>Computational Science</li>
-        <li>Embedded Systems & Electronics </li>
+        <li>Embedded Systems & Electronics</li>
         <li>Automation & Robotics</li>
         <li>Image Analysis</li>
         <li>Machine Learning</li>
@@ -79,7 +79,7 @@
         <p class="muted">Loading latest articles...</p>
       </div>
       <p class="tiny muted">
-        Source: Medium RSS feed via rss2json. If it fails, it may be blocked or rate-limited.
+        Source: DEV.to RSS feed. If it fails, it may be blocked or rate-limited.
       </p>
     </section>
 
@@ -99,7 +99,7 @@
 <script>
 
 async function loadMediumArticles() {
-  const rssUrl = "https://rotsl.medium.com/feed";
+  const rssUrl = "https://dev.to/feed/rotsl";
   const proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(rssUrl);
 
   try {
